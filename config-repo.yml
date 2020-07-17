@@ -1,0 +1,57 @@
+version: 0.1
+log:
+  accesslog:
+    disabled: false
+  level: info
+  formatted: text
+  fields:
+    service: registry
+    environment: production
+storage:
+  filesystem:
+    rootdirectory: /var/lib/registry
+  cache:
+    blobdescriptor: inmemory
+  delete:
+    enabled: true
+  maintenance:
+    uploadpurging:
+      enabled: true
+      age: 168h
+      interval: 24h
+      dryrun: false
+    readonly:
+      enabled: false
+auth:
+  htpasswd:
+    realm: registry
+    path: /auth/htpasswd
+http:
+  addr: :5000
+  net: tcp
+  host: CHANGEME
+  secret: CHANGEME
+  tls:
+    certificate: /certs/cert.pem
+    key: /certs/privkey.pem
+  http2:
+    disabled: false
+health:
+  storagedriver:
+    enabled: true
+    interval: 10s
+    threshold: 3
+notifications:
+  events:
+    includereferences: true
+  endpoints:
+    - name: docker-registry-ui
+      disabled: false
+      url: http://ui:8000/api/events
+      headers:
+        Authorization: [Bearer CHANGEME]
+      timeout: 1s
+      threshold: 5
+      backoff: 10s
+      ignoredmediatypes:
+        - application/octet-stream

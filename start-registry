@@ -1,0 +1,17 @@
+#!/usr/bin/env bash
+
+ensure_dir() {
+  if [ ! -d "$1" ]; then
+    mkdir -p "$1"
+    if [ $# -gt 1 ]; then
+      chown "$2" "$1"
+    fi
+  fi
+}
+
+ensure_dir "./auth"
+ensure_dir "./certs"
+ensure_dir "./data/repo"
+ensure_dir "./data/ui" 65534:65534
+
+docker-compose up -d

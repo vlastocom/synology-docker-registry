@@ -1,0 +1,28 @@
+version: '3.7'
+services:
+  repo:
+    restart: always
+    image: registry:2
+    ports:
+      - 49999:5000
+    volumes:
+      - ./data/repo:/var/lib/registry
+      - ./certs:/certs
+      - ./auth:/auth
+      - ./config-repo.yml:/etc/docker/registry/config.yml
+    networks:
+      registry-network: {}
+  ui:
+    restart: always
+    image: quiq/docker-registry-ui
+    ports:
+      - 49998:8000
+    volumes:
+      - ./config-ui.yml:/opt/config.yml:ro
+      - ./data/ui:/opt/data
+    networks:
+      registry-network: {}
+networks:
+  registry-network:
+      driver: bridge
+
